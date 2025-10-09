@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
   Image,
 } from "react-native";
-import Img1 from "../../../assets/Hydropod_Logo.png";
+// import Img1 from "../../../assets/Hydropod_Logo.png";
 import Icon from "react-native-vector-icons/Feather";
 
 const { width } = Dimensions.get("window");
