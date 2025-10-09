@@ -22,6 +22,19 @@
       },
       "edgeToEdgeEnabled": true
     },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 54,
+            "targetSdkVersion": 54,
+            "buildToolsVersion": "54.0.12"
+          }
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     }
