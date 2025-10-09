@@ -11,13 +11,17 @@ import {
   Pressable,
   ActivityIndicator,
   Image,
+  Alert,
 } from "react-native";
-// import Img1 from "../../../assets/Hydropod_Logo.png";
+import Img1 from "../../assets/Hydropod_logo.jpg";
+import Img2 from "../../assets/Login001.jpg";
 import Icon from "react-native-vector-icons/Feather";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 
 const Login = ({ setUserToken }) => {
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [mobileNumber, setMobileNumber] = useState("");
@@ -34,73 +38,113 @@ const Login = ({ setUserToken }) => {
       newErrors.mobileNumber = "Enter a valid 10-digit number";
       valid = false;
     }
-
     setErrors(newErrors);
     return valid;
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!validate()) return;
 
     setLoading(true);
+    try {
+      const response = await fetch(
+        "https://hydrowater-backend.vercel.app/auth/loginTechnician",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ mobile_number: mobileNumber }), // send only 10 digits
+        }
+      );
 
-    // Simulate login delay
-    setTimeout(() => {
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.log("Login API Error:", data);
+        Alert.alert("Error", data.error?.message || "Something went wrong");
+        setLoading(false);
+        return;
+      }
+
+      if (data.success) {
+        Alert.alert("Success", data.message, [
+          {
+            text: "OK",
+            onPress: () =>
+              navigation.navigate("Otp", {
+                phone: mobileNumber, // pass 10-digit number to OTP
+                setUserToken,
+              }),
+          },
+        ]);
+      } else {
+        Alert.alert("Error", data.message || "Something went wrong");
+      }
       setLoading(false);
-      setUserToken("dummy-token"); // fake login success
-    }, 1000);
+    } catch (error) {
+      setLoading(false);
+      console.log("Login API Exception:", error);
+      Alert.alert("Error", "Unable to connect to server");
+    }
   };
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.imageContainer}>
-        {/* <Image source={Img1} style={styles.image} resizeMode="contain" /> */}
+        <Image source={Img1} style={styles.image} resizeMode="contain" />
       </View>
-      <Text style={styles.heading}>Let's Sign In</Text>
-
-      <View style={styles.formContainer}>
-        <View style={styles.fieldset}>
-          <Text style={styles.legend}>Mobile Number</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons
-              name="call-outline"
-              size={20}
-              color="#4B5563"
-              style={styles.icon}
-            />
-            <Text style={styles.prefix}>{country}</Text>
-            <TextInput
-              placeholder="Enter Your Phone"
-              style={styles.textInput}
-              keyboardType="phone-pad"
-              value={mobileNumber}
-              onChangeText={setMobileNumber}
-            />
-          </View>
-          {errors.mobileNumber && (
-            <Text style={styles.errorText}>{errors.mobileNumber}</Text>
-          )}
+      <View style={styles.loginSide}>
+        <View style={styles.loginImageContainer}>
+          <Image source={Img2} style={styles.loginImage} resizeMode="contain" />
         </View>
-      </View>
+        <Text style={styles.heading}>Let's Sign In</Text>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, loading && styles.disabledButton]}
-          onPress={handleLogin}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Sign In</Text>
-          )}
-        </TouchableOpacity>
-      </View>
+        <View style={styles.formContainer}>
+          <View style={styles.fieldset}>
+            <Text style={styles.legend}>Mobile Number</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons
+                name="call-outline"
+                size={20}
+                color="#4B5563"
+                style={styles.icon}
+              />
+              <Text style={styles.prefix}>{country}</Text>
+              <TextInput
+                placeholder="Enter Your Phone"
+                style={styles.textInput}
+                keyboardType="phone-pad"
+                value={mobileNumber}
+                onChangeText={setMobileNumber}
+              />
+            </View>
+            {errors.mobileNumber && (
+              <Text style={styles.errorText}>{errors.mobileNumber}</Text>
+            )}
+          </View>
+        </View>
 
-      {/* <Pressable style={styles.signUpContainer}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, loading && styles.disabledButton]}
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Sign In</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {/* <Pressable style={styles.signUpContainer}>
         <Text style={styles.signUpText}>Don't have an account?</Text>
         <Text style={styles.signUpLink}> Sign Up</Text>
       </Pressable> */}
+      </View>
     </ScrollView>
   );
 };
@@ -110,22 +154,37 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: "#ffffff",
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 2,
     // alignItems: "center",
     // justifyContent: "center",
   },
+  loginSide: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   imageContainer: {
     width: "100%",
-    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 2,
   },
   image: {
+    width: width * 0.3,
+    height: width * 0.3,
+  },
+  loginImageContainer: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  loginImage: {
     width: width * 0.9,
-    height: width * 0.8,
+    height: width * 0.6,
   },
   heading: {
     fontSize: 32,
     fontWeight: "bold",
     textAlign: "center",
+    color: "#31506d",
     marginBottom: 30,
   },
   formContainer: {
@@ -187,7 +246,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   disabledButton: {
-    backgroundColor: "#A7F3D0",
+    backgroundColor: "#6787a5ff",
   },
   buttonText: {
     color: "#fff",

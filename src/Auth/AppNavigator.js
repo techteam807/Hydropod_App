@@ -3,6 +3,7 @@ import React from "react";
 import Home from "../Screen/Home/Home";
 import Activity from "../Screen/Home/Activity";
 import Profile from "../Screen/Home/Profile";
+import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +19,7 @@ const AppNavigator = ({ setUserToken }) => {
           if (route.name === "Home") icon = "home-outline";
           else if (route.name === "Activity") icon = "list-outline";
           else if (route.name === "Profile") icon = "person-outline";
-        //   return <Ionicons name={icon} size={size} color={color} />;
+          return <Ionicons name={icon} size={size} color={color} />;
         },
       })}
     >
