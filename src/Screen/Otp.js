@@ -10,6 +10,8 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Img1 from "../../assets/Hydropod_logo.jpg";
 import Img2 from "../../assets/Otp.jpg";
@@ -65,17 +67,18 @@ const Otp = ({ route, navigation }) => {
       );
 
       const data = await response.json();
+      console.log("data",data);
+      
       setLoading(false);
 
       if (response.ok && data.success) {
-        // Store token in AsyncStorage
         await AsyncStorage.setItem("userToken", data.data.token);
-        // Call setUserToken to update app state
         setUserToken(data.data.token);
+        console.log("setUserToken",setUserToken);
         Alert.alert("Success", data.message, [
           {
             text: "OK",
-            onPress: () => navigation.replace("Home"), // navigate to Home
+            onPress: () => navigation.replace("Home"), 
           },
         ]);
       } else {
@@ -92,54 +95,59 @@ const Otp = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image source={Img1} style={styles.image} resizeMode="contain" />
-      </View>
-      <View style={styles.otpSide}>
-        <View style={styles.otpImageContainer}>
-          <Image source={Img2} style={styles.otpImage} resizeMode="contain" />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
+        <View style={styles.imageContainer}>
+          <Image source={Img1} style={styles.image} resizeMode="contain" />
         </View>
-        <Text style={styles.title}>OTP Verification</Text>
-        <Text style={styles.subtitle}>Enter the 6-digit code sent to</Text>
-        <Text style={styles.phone}>{phone}</Text>
+        <View style={styles.otpSide}>
+          <View style={styles.otpImageContainer}>
+            <Image source={Img2} style={styles.otpImage} resizeMode="contain" />
+          </View>
+          <Text style={styles.title}>OTP Verification</Text>
+          <Text style={styles.subtitle}>Enter the 6-digit code sent to</Text>
+          <Text style={styles.phone}>{phone}</Text>
 
-        <View style={styles.otpContainer}>
-          {otp.map((digit, index) => (
-            <TextInput
-              key={index}
-              ref={(ref) => (inputs.current[index] = ref)}
-              style={styles.inputBox}
-              keyboardType="number-pad"
-              maxLength={1}
-              value={digit}
-              onChangeText={(text) => handleChange(text, index)}
-              onKeyPress={(e) => handleBackspace(e, index)}
-              autoFocus={index === 0}
-            />
-          ))}
+          <View style={styles.otpContainer}>
+            {otp.map((digit, index) => (
+              <TextInput
+                key={index}
+                ref={(ref) => (inputs.current[index] = ref)}
+                style={styles.inputBox}
+                keyboardType="number-pad"
+                maxLength={1}
+                value={digit}
+                onChangeText={(text) => handleChange(text, index)}
+                onKeyPress={(e) => handleBackspace(e, index)}
+                autoFocus={index === 0}
+              />
+            ))}
+          </View>
+
+          <TouchableOpacity
+            style={[styles.button, loading && { opacity: 0.6 }]}
+            onPress={handleVerify}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Verify OTP</Text>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.resendContainer}>
+            <Text style={styles.resendText}>
+              Didn’t receive the code?{" "}
+              <Text style={styles.resendLink}>Resend OTP</Text>
+            </Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={[styles.button, loading && { opacity: 0.6 }]}
-          onPress={handleVerify}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Verify OTP</Text>
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.resendContainer}>
-          <Text style={styles.resendText}>
-            Didn’t receive the code?{" "}
-            <Text style={styles.resendLink}>Resend OTP</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#31506d",
+    color: "#32516e",
     marginBottom: 10,
   },
   subtitle: { fontSize: 16, color: "#6b7280", textAlign: "center" },
@@ -184,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9fafb",
   },
   button: {
-    backgroundColor: "#31506d",
+    backgroundColor: "#32516e",
     paddingVertical: 14,
     borderRadius: 10,
     width: "80%",

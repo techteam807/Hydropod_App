@@ -12,6 +12,8 @@ import {
   ActivityIndicator,
   Image,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Img1 from "../../assets/Hydropod_logo.jpg";
 import Img2 from "../../assets/Login001.jpg";
@@ -89,63 +91,71 @@ const Login = ({ setUserToken }) => {
     }
   };
 
-
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image source={Img1} style={styles.image} resizeMode="contain" />
-      </View>
-      <View style={styles.loginSide}>
-        <View style={styles.loginImageContainer}>
-          <Image source={Img2} style={styles.loginImage} resizeMode="contain" />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <View style={styles.imageContainer}>
+          <Image source={Img1} style={styles.image} resizeMode="contain" />
         </View>
-        <Text style={styles.heading}>Let's Sign In</Text>
-
-        <View style={styles.formContainer}>
-          <View style={styles.fieldset}>
-            <Text style={styles.legend}>Mobile Number</Text>
-            <View style={styles.inputContainer}>
-              <Ionicons
-                name="call-outline"
-                size={20}
-                color="#4B5563"
-                style={styles.icon}
-              />
-              <Text style={styles.prefix}>{country}</Text>
-              <TextInput
-                placeholder="Enter Your Phone"
-                style={styles.textInput}
-                keyboardType="phone-pad"
-                value={mobileNumber}
-                onChangeText={setMobileNumber}
-              />
-            </View>
-            {errors.mobileNumber && (
-              <Text style={styles.errorText}>{errors.mobileNumber}</Text>
-            )}
+        <View style={styles.loginSide}>
+          <View style={styles.loginImageContainer}>
+            <Image
+              source={Img2}
+              style={styles.loginImage}
+              resizeMode="contain"
+            />
           </View>
-        </View>
+          <Text style={styles.heading}>Let's Sign In</Text>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[styles.button, loading && styles.disabledButton]}
-            onPress={handleLogin}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Sign In</Text>
-            )}
-          </TouchableOpacity>
-        </View>
+          <View style={styles.formContainer}>
+            <View style={styles.fieldset}>
+              <Text style={styles.legend}>Mobile Number</Text>
+              <View style={styles.inputContainer}>
+                <Ionicons
+                  name="call-outline"
+                  size={20}
+                  color="#4B5563"
+                  style={styles.icon}
+                />
+                <Text style={styles.prefix}>{country}</Text>
+                <TextInput
+                  placeholder="Enter Your Phone"
+                  style={styles.textInput}
+                  keyboardType="phone-pad"
+                  value={mobileNumber}
+                  onChangeText={setMobileNumber}
+                />
+              </View>
+              {errors.mobileNumber && (
+                <Text style={styles.errorText}>{errors.mobileNumber}</Text>
+              )}
+            </View>
+          </View>
 
-        {/* <Pressable style={styles.signUpContainer}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.button, loading && styles.disabledButton]}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Sign In</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* <Pressable style={styles.signUpContainer}>
         <Text style={styles.signUpText}>Don't have an account?</Text>
         <Text style={styles.signUpLink}> Sign Up</Text>
       </Pressable> */}
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -184,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#31506d",
+    color: "#32516e",
     marginBottom: 30,
   },
   formContainer: {
@@ -237,7 +247,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   button: {
-    backgroundColor: "#31506d",
+    backgroundColor: "#32516e",
     paddingVertical: 12,
     paddingHorizontal: 40,
     borderRadius: 10,

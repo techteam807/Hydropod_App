@@ -11,9 +11,12 @@ const AuthNavigator = ({ setUserToken }) => {
       <Stack.Screen name="Login">
         {(props) => <Login {...props} setUserToken={setUserToken} />}
       </Stack.Screen>
-      <Stack.Screen name="Otp" component={Otp} />
+      <Stack.Screen name="Otp">
+        {(props) => <Otp {...props} setUserToken={setUserToken} />}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 };
 
 export default AuthNavigator;
+

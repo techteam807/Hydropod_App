@@ -1,11 +1,18 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 
 const Profile = ({ setUserToken }) => {
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("userToken");
+    setUserToken(null); // go back to Login screen
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>👤 Profile Screen</Text>
-      <Button title="Logout" color="red" onPress={() => setUserToken(null)} />
+      <Button title="Logout" color="red" onPress={handleLogout} />
     </View>
   );
 };
