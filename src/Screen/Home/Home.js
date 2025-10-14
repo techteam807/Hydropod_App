@@ -15,13 +15,28 @@ import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
   const navigation = useNavigation();
+
   const handlePress = (podName) => {
-    if (podName === "Amber & Purple Pod") {
-      navigation.navigate("AmberCalculator"); 
-    } else {
-      console.log(`${podName} pressed`);
+    switch (podName) {
+      case "Amber & Purple Pod":
+        navigation.navigate("AmberCalculator");
+        break;
+      case "Filt Pod":
+        navigation.navigate("FiltCalculator");
+        break;
+      case "Hexa Pod":
+        navigation.navigate("HexaCalculator");
+        break;
+      case "Opti Pod":
+        navigation.navigate("OptiCalculator");
+        break;
+      default:
+        console.log(`${podName} pressed`);
+        break;
     }
   };
+
+  const pods = ["Amber & Purple Pod", "Filt Pod", "Hexa Pod", "Opti Pod"];
 
   const buttons = [
     {
@@ -31,7 +46,7 @@ const Home = () => {
     },
     { name: "Hexa Pod", color: ["#8E44AD", "#9B59B6"], icon: "cube" },
     { name: "Opti Pod", color: ["#3498DB", "#2980B9"], icon: "speedometer" },
-    { name: "Fourth Pod", color: ["#2ECC71", "#27AE60"], icon: "leaf" },
+    { name: "Filt Pod", color: ["#2ECC71", "#27AE60"], icon: "leaf" },
   ];
 
   return (

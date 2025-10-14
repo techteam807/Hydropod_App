@@ -47,19 +47,19 @@ export const vesselBackwashRinse = [
 ];
 
 export const BLFCIdentifier = [
-  { flowGPM: 0.2, colour: "Grey" },
-  { flowGPM: 0.3, colour: "White" },
-  { flowGPM: 0.7, colour: "Black" },
+  { flowGPM: 0.2, colour: "#1 Grey" },
+  { flowGPM: 0.3, colour: "#2 White" },
+  { flowGPM: 0.7, colour: "#3 Black" },
 ];
 
 export const DLFCIdentifier = [
-  { flowGPM: 1.5, colour: "Grey" },
-  { flowGPM: 2.0, colour: "Grey" },
-  { flowGPM: 2.4, colour: "Grey" },
-  { flowGPM: 3.0, colour: "White" },
-  { flowGPM: 3.5, colour: "White" },
-  { flowGPM: 4.0, colour: "White" },
-  { flowGPM: 5.0, colour: "White" },
+  { flowGPM: 1.5, colour: "#1 Grey" },
+  { flowGPM: 2.0, colour: "#2 Grey" },
+  { flowGPM: 2.4, colour: "#3 Grey" },
+  { flowGPM: 3.0, colour: "#4 White" },
+  { flowGPM: 3.5, colour: "#5 White" },
+  { flowGPM: 4.0, colour: "#6 White" },
+  { flowGPM: 5.0, colour: "#7 White" },
 ];
 
 export const backwashActivatedCarbon = [
