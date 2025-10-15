@@ -7,6 +7,7 @@ import {
   ScrollView,
   Animated,
   TouchableWithoutFeedback,
+  Platform,
 } from "react-native";
 import React, { useState, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +21,8 @@ import {
   getVesselInjectorFlow,
 } from "../../utilis/services";
 import { BLFCIdentifier, DLFCIdentifier } from "../../utilis/constant";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
 
 const AmberCalculator = () => {
   const navigation = useNavigation();
@@ -258,6 +261,66 @@ const AmberCalculator = () => {
     setNoOfReg(null);
     setTotalHardnessRemoval(null);
     setCalculationResult(null);
+  };
+
+  const downloadPDF = async () => {
+    if (!calculationResult) {
+      alert("No calculation results to generate PDF");
+      return;
+    }
+
+    const htmlContent = `
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; color: #2C3E50; }
+          h2 { text-align: center; color: #32516e; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          th, td { border: 1px solid #BDC3C7; padding: 10px; text-align: left; }
+          th { background-color: #32516e; color: white; }
+          tr:nth-child(even) { background-color: #f2f2f2; }
+        </style>
+      </head>
+      <body>
+        <h2>Amber & Purple Calculation Report</h2>
+        <h3>Input Data</h3>
+        <table>
+          <tr><th>Parameter</th><th>Value</th></tr>
+          <tr><td>Hardness (ppm)</td><td>${hardness}</td></tr>
+          <tr><td>Water Flow (LPH)</td><td>${waterFlow}</td></tr>
+          <tr><td>Vessel Size</td><td>${vesselSize}</td></tr>
+          <tr><td>Regeneration Level</td><td>${regenerationLevel}</td></tr>
+          <tr><td>No. of Regenerations</td><td>${noOfReg}</td></tr>
+        </table>
+
+        <h3>Calculation Results</h3>
+        <table>
+          <tr><th>Parameter</th><th>Value</th></tr>
+          ${Object.keys(calculationResult)
+            .map(
+              (key) =>
+                `<tr><td>${key}</td><td>${calculationResult[key]}</td></tr>`
+            )
+            .join("")}
+        </table>
+      </body>
+    </html>
+  `;
+
+    try {
+      const { uri } = await Print.printToFileAsync({
+        html: htmlContent,
+        base64: false,
+      });
+
+      if (Platform.OS === "ios" || Platform.OS === "android") {
+        await Sharing.shareAsync(uri);
+      } else {
+        alert(`PDF saved at: ${uri}`);
+      }
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    }
   };
 
   return (
@@ -527,7 +590,7 @@ const AmberCalculator = () => {
               ))}
             </View>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={downloadPDF}>
               <Text style={styles.buttonText1}>Download PDF</Text>
             </TouchableOpacity>
           </View>
@@ -559,7 +622,7 @@ const styles = StyleSheet.create({
     paddingBottom: 9,
     paddingTop: 35,
     backgroundColor: "#fff",
-    borderRadius:12
+    borderRadius: 12,
   },
   headerText: {
     fontWeight: "500",

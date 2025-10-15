@@ -80,9 +80,11 @@ export const getBackwashDaysByTSS = (TSS) => {
   return found ? found.backwashDays : null;
 };
 
-export const getPolyfiltVelocityByTSS = (TSS) => {
-  const found = polyfiltServiceVelocity?.find((item) => item.TSS === TSS);
-  return found
-    ? { velocityLow: found.velocityLow, velocityHigh: found.velocityHigh }
-    : null;
+export const getVelocityByTSS = (TSSValue) => {
+  for (let i = 0; i < polyfiltServiceVelocity.length; i++) {
+    if (TSSValue < polyfiltServiceVelocity[i].TSS) {
+      return polyfiltServiceVelocity[i]?.velocity ?? null;
+    }
+  }
+  return polyfiltServiceVelocity[polyfiltServiceVelocity.length - 1].velocity;
 };

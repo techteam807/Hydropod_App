@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Image,
-  Dimensions,
   ScrollView,
+  Animated,
+  Dimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import logo from "../../../assets/Hydropod_Logo.png";
+import filtImg from "../../../assets/FILT_Pod.png";
 import { useNavigation } from "@react-navigation/native";
+
+const { width } = Dimensions.get("window");
 
 const Home = () => {
   const navigation = useNavigation();
@@ -36,22 +40,16 @@ const Home = () => {
     }
   };
 
-  const pods = ["Amber & Purple Pod", "Filt Pod", "Hexa Pod", "Opti Pod"];
-
-  const buttons = [
-    {
-      name: "Amber & Purple Pod",
-      color: ["#FFBF00", "#FFA500"],
-      icon: "water",
-    },
-    { name: "Hexa Pod", color: ["#8E44AD", "#9B59B6"], icon: "cube" },
-    { name: "Opti Pod", color: ["#3498DB", "#2980B9"], icon: "speedometer" },
-    { name: "Filt Pod", color: ["#2ECC71", "#27AE60"], icon: "leaf" },
+  const pods = [
+    { name: "Amber & Purple Pod", color: "#FFD966", image: filtImg },
+    { name: "Hexa Pod", color: "#B39CD0", image: filtImg },
+    { name: "Opti Pod", color: "#93CFF0", image: filtImg },
+    { name: "Filt Pod", color: "#82E0AA", image: filtImg },
   ];
 
   return (
     <View style={styles.container}>
-      {/* ====== Header ====== */}
+      {/* Header */}
       <View style={styles.header}>
         <Image source={logo} style={styles.headerLogo} resizeMode="contain" />
         <Ionicons
@@ -62,46 +60,61 @@ const Home = () => {
         />
       </View>
 
-      {/* ====== Main Content ====== */}
+      {/* Scrollable content */}
       <ScrollView
         style={styles.scrollArea}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>💧Welcome to HydroWater Pods</Text>
+        <Text style={styles.title}>💧 Welcome to HydroPods</Text>
         <Text style={styles.subtitle}>Choose your Pod to get started</Text>
 
-        <View style={styles.buttonGrid}>
-          {buttons.map((btn, index) => (
-            <TouchableOpacity
+        {pods.map((pod, index) => {
+          const scaleAnim = useRef(new Animated.Value(1)).current;
+
+          const onPressIn = () => {
+            Animated.spring(scaleAnim, {
+              toValue: 0.97,
+              useNativeDriver: true,
+            }).start();
+          };
+
+          const onPressOut = () => {
+            Animated.spring(scaleAnim, {
+              toValue: 1,
+              useNativeDriver: true,
+            }).start();
+          };
+
+          return (
+            <TouchableWithoutFeedback
               key={index}
-              style={styles.button}
-              onPress={() => handlePress(btn.name)}
+              onPress={() => handlePress(pod.name)}
+              onPressIn={onPressIn}
+              onPressOut={onPressOut}
             >
-              <LinearGradient colors={btn.color} style={styles.gradient}>
-                <Ionicons
-                  name={btn.icon}
-                  size={32}
-                  color="#fff"
-                  style={{ marginBottom: 10 }}
-                />
-                <Text style={styles.buttonText}>{btn.name}</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          ))}
-        </View>
+              <Animated.View
+                style={[
+                  styles.card,
+                  {
+                    backgroundColor: pod.color,
+                    transform: [{ scale: scaleAnim }],
+                  },
+                ]}
+              >
+                <Image source={pod.image} style={styles.cardImage} />
+                <Text style={styles.cardText}>{pod.name}</Text>
+              </Animated.View>
+            </TouchableWithoutFeedback>
+          );
+        })}
       </ScrollView>
     </View>
   );
 };
 
-const { width } = Dimensions.get("window");
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#EAEDED",
-  },
+  container: { flex: 1, backgroundColor: "#EAEDED" },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -116,29 +129,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
   },
-  headerLogo: {
-    width: 120,
-    height: 40,
-    marginTop: 30,
-  },
-  headerIcon: {
-    marginTop: 30,
-  },
-  scrollArea: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 40,
-  },
+  headerLogo: { width: 120, height: 40, marginTop: 30 },
+  headerIcon: { marginTop: 30 },
+  scrollArea: { flex: 1 },
+  scrollContent: { flexGrow: 1, alignItems: "center", paddingVertical: 40 },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#2C3E50",
     textAlign: "center",
-    paddingHorizontal: 5,
+    marginBottom: 5,
   },
   subtitle: {
     fontSize: 15,
@@ -146,33 +146,32 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: "center",
   },
-  buttonGrid: {
-    width: "90%",
+  card: {
+    width: width * 0.9,
+    height: 100,
+    borderRadius: 60, // rounded oval shape
     flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  button: {
-    width: "48%",
-    marginBottom: 20,
-    borderRadius: 15,
+    alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 30,
+    marginBottom: 25,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 6,
   },
-  gradient: {
-    paddingVertical: 25,
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
+  cardImage: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
+    marginRight: 20,
+    marginLeft: -20, // pop-out effect
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
+  cardText: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#2C3E50",
   },
 });
 

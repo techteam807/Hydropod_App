@@ -42,8 +42,20 @@ export const vesselInjectorFlow = [
 ];
 
 export const vesselBackwashRinse = [
-  { vessel: "10 x 54", backwash: 10, brineInjection: 60, rinse: 10, refill: 4.5 },
-  { vessel: "13 x 54", backwash: 10, brineInjection: 40, rinse: 10, refill: 4.5 },
+  {
+    vessel: "10 x 54",
+    backwash: 10,
+    brineInjection: 60,
+    rinse: 10,
+    refill: 4.5,
+  },
+  {
+    vessel: "13 x 54",
+    backwash: 10,
+    brineInjection: 40,
+    rinse: 10,
+    refill: 4.5,
+  },
 ];
 
 export const BLFCIdentifier = [
@@ -71,10 +83,10 @@ export const backwashActivatedCarbon = [
 ];
 
 export const polyfiltServiceVelocity = [
-  { TSS: 0.9, velocityLow: 22, velocityHigh: 20 },
-  { TSS: 5.1, velocityLow: 20, velocityHigh: 18 },
-  { TSS: 10.1, velocityLow: 17, velocityHigh: 15 },
-  { TSS: 25.1, velocityLow: 14, velocityHigh: 12 },
-  { TSS: 50.1, velocityLow: 12, velocityHigh: 10 },
-  { TSS: 100, velocityLow: 10, velocityHigh: 8 },
+  { TSS: 0.9, velocity: 22, other: 20 },
+  { TSS: 5.1, velocity: 20, other: 18 },
+  { TSS: 10.1, velocity: 17, other: 15 },
+  { TSS: 25.1, velocity: 14, other: 12 },
+  { TSS: 50.1, velocity: 12, other: 10 },
+  { TSS: 100, velocity: 10, other: 8 },
 ];
