@@ -203,8 +203,16 @@ const FiltCalculator = () => {
     ];
 
     // Create Calculation Results table dynamically
+    const resultLabels = {
+      MaximumFlow: "Maximum Flow (LPH)",
+      BackwashReqDays: "Backwash Frequency (Days)",
+      BackwashDuration: "Backwash Time (min)",
+      BackwashFlow: "Backwash Flow (LPH)",
+    };
+
+    // Map calculationResult to displayable data
     const resultData = Object.keys(calculationResult).map((key) => ({
-      label: key,
+      label: resultLabels[key] || key, // Use mapping or fallback to key
       value: calculationResult[key],
     }));
 
@@ -265,16 +273,6 @@ const FiltCalculator = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "gray" }}>
-      {/* Header */}
-      <View style={styles.share}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={28} color={"black"} />
-          </TouchableOpacity>
-          <Text style={styles.headerText}>Filt Calculate</Text>
-        </View>
-      </View>
-
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"

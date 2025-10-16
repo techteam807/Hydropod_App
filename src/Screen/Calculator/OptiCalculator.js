@@ -310,21 +310,25 @@ const OptiCalculator = () => {
           <tr><td>Inlet Hardness (ppm)</td><td>${hardness}</td></tr>
           <tr><td>Maximum Flow (LPH)</td><td>${waterFlow}</td></tr>
           <tr><td>Residual Chlorine (ppm)</td><td>${residualChlorine}</td></tr>
-          <tr><td>Vessel Size</td><td>${vesselSize}</td></tr>
-          <tr><td>Regeneration Level</td><td>${regenerationLevel}</td></tr>
-          <tr><td>No. of Regenerations</td><td>${noOfReg}</td></tr>
+          <tr><td>Vessel Size (inches)</td><td>${vesselSize}</td></tr>
+          <tr><td>Regeneration Level (g NaCL/Ltr Resin)</td><td>${regenerationLevel}</td></tr>
+          <tr><td>No. of Regenerations/Brine Tank</td><td>${noOfReg}</td></tr>
         </table>
 
         <h3>Calculation Results</h3>
-        <table>
-          <tr><th>Parameter</th><th>Value</th></tr>
-          ${Object.keys(calculationResult)
-            .map(
-              (key) =>
-                `<tr><td>${key}</td><td>${calculationResult[key]}</td></tr>`
-            )
-            .join("")}
-        </table>
+          <table>
+            <tr><th>Parameter</th><th>Value</th></tr>
+            <tr><td>OBR Volume (T)</td><td>${calculationResult.OBRVolume}</td></tr>
+            <tr><td>Injector</td><td>${calculationResult.Injector}</td></tr>
+            <tr><td>BLFC</td><td>${calculationResult.BLFC}</td></tr>
+            <tr><td>DLFC</td><td>${calculationResult.DLFC}</td></tr>
+            <tr><td>Set Time for Backwash (min)</td><td>${calculationResult.Backwash}</td></tr>
+            <tr><td>Set Time for Brine Draw (min)</td><td>${calculationResult.BrineInjection}</td></tr>
+            <tr><td>Set Time for Raise (min)</td><td>${calculationResult.Rinse}</td></tr>
+            <tr><td>Set Time for Refill (min)</td><td>${calculationResult.Refill}</td></tr>
+            <tr><td>Salt Required/Regeneration (kg NaCL)</td><td>${calculationResult.SaltRequiredRegeneration}</td></tr>
+            <tr><td>Salt in Brine Tank (kg NaCL)</td><td>${calculationResult.SaltBrineTank}</td></tr>
+          </table>
       </body>
     </html>
   `;
@@ -347,16 +351,6 @@ const OptiCalculator = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "gray" }}>
-      {/* Header */}
-      <View style={styles.share}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={28} color={"black"} />
-          </TouchableOpacity>
-          <Text style={styles.headerText}>Opti Calculate</Text>
-        </View>
-      </View>
-
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"

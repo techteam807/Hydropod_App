@@ -269,6 +269,22 @@ const AmberCalculator = () => {
       return;
     }
 
+    const resultLabels = [
+      { label: "OBR Volume (T)", key: "OBRVolume" },
+      { label: "Injector", key: "Injector" },
+      { label: "BLFC", key: "BLFC" },
+      { label: "DLFC", key: "DLFC" },
+      { label: "Set Time for Backwash (min)", key: "Backwash" },
+      { label: "Set Time for Brine Draw (min)", key: "BrineInjection" },
+      { label: "Set Time for Raise (min)", key: "Rinse" },
+      { label: "Set Time for Refill (min)", key: "Refill" },
+      {
+        label: "Salt Required/Regeneration (kg NaCL)",
+        key: "SaltRequiredRegeneration",
+      },
+      { label: "Salt in Brine Tank (kg NaCL)", key: "SaltBrineTank" },
+    ];
+
     const htmlContent = `
     <html>
       <head>
@@ -286,20 +302,20 @@ const AmberCalculator = () => {
         <h3>Input Data</h3>
         <table>
           <tr><th>Parameter</th><th>Value</th></tr>
-          <tr><td>Hardness (ppm)</td><td>${hardness}</td></tr>
-          <tr><td>Water Flow (LPH)</td><td>${waterFlow}</td></tr>
-          <tr><td>Vessel Size</td><td>${vesselSize}</td></tr>
-          <tr><td>Regeneration Level</td><td>${regenerationLevel}</td></tr>
-          <tr><td>No. of Regenerations</td><td>${noOfReg}</td></tr>
+          <tr><td>Inlet Hardness (ppm)</td><td>${hardness}</td></tr>
+          <tr><td>Maximum Flow (LPH)</td><td>${waterFlow}</td></tr>
+          <tr><td>Vessel Size (inches)</td><td>${vesselSize}</td></tr>
+          <tr><td>Regeneration Level (g NaCl/ Ltr Resin)</td><td>${regenerationLevel}</td></tr>
+          <tr><td>No. of Regenerations/Brine Tank</td><td>${noOfReg}</td></tr>
         </table>
 
         <h3>Calculation Results</h3>
         <table>
           <tr><th>Parameter</th><th>Value</th></tr>
-          ${Object.keys(calculationResult)
+          ${resultLabels
             .map(
-              (key) =>
-                `<tr><td>${key}</td><td>${calculationResult[key]}</td></tr>`
+              ({ label, key }) =>
+                `<tr><td>${label}</td><td>${calculationResult[key]}</td></tr>`
             )
             .join("")}
         </table>
@@ -325,16 +341,6 @@ const AmberCalculator = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "gray" }}>
-      {/* Header */}
-      <View style={styles.share}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={28} color={"black"} />
-          </TouchableOpacity>
-          <Text style={styles.headerText}>Amber & Purple Calculate</Text>
-        </View>
-      </View>
-
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
@@ -577,7 +583,7 @@ const AmberCalculator = () => {
                 { label: "Set Time for Refill (min)", key: "Refill" },
                 {
                   label: "Salt Required/Regeneration (kg NaCL)",
-                  key: "SaltRequiredRegeneration",
+                  key: "Salt RequiredRegeneration",
                 },
                 { label: "Salt in Brine Tank (kg NaCL)", key: "SaltBrineTank" },
               ].map(({ label, key }) => (

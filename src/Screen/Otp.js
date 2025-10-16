@@ -13,8 +13,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import Img1 from "../../assets/Hydropod_logo.jpg";
-import Img2 from "../../assets/Otp.jpg";
+import Img1 from "../../assets/Hydropod_Logo.png";
+import Img2 from "../../assets/Otp.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
@@ -67,18 +67,24 @@ const Otp = ({ route, navigation }) => {
       );
 
       const data = await response.json();
-      console.log("data",data);
-      
+      console.log("data", data);
+
       setLoading(false);
 
       if (response.ok && data.success) {
+        const user = data?.data?.user || {};
+        console.log("✅ User to store:", user);
         await AsyncStorage.setItem("userToken", data.data.token);
+        await AsyncStorage.setItem("userData", JSON.stringify(user));
+
+        const checkUser = await AsyncStorage.getItem("userData");
+        console.log("🔍 Check stored userData:", checkUser);
         setUserToken(data.data.token);
-        console.log("setUserToken",setUserToken);
+        console.log("setUserToken", setUserToken);
         Alert.alert("Success", data.message, [
           {
             text: "OK",
-            onPress: () => navigation.replace("Home"), 
+            onPress: () => navigation.replace("Home"),
           },
         ]);
       } else {

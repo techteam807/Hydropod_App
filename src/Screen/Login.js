@@ -15,8 +15,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import Img1 from "../../assets/Hydropod_logo.jpg";
-import Img2 from "../../assets/Login001.jpg";
+import Img1 from "../../assets/Hydropod_Logo.png";
+import Img2 from "../../assets/Login001.png";
 import Icon from "react-native-vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
 
@@ -64,7 +64,7 @@ const Login = ({ setUserToken }) => {
 
       if (!response.ok) {
         console.log("Login API Error:", data);
-        Alert.alert("Error", data.error?.message || "Something went wrong");
+        Alert.alert("Error", data.message || "Something went wrong");
         setLoading(false);
         return;
       }
@@ -75,7 +75,7 @@ const Login = ({ setUserToken }) => {
             text: "OK",
             onPress: () =>
               navigation.navigate("Otp", {
-                phone: mobileNumber, // pass 10-digit number to OTP
+                phone: mobileNumber,
                 setUserToken,
               }),
           },

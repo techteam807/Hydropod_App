@@ -8,6 +8,7 @@ import {
   ScrollView,
   Animated,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -41,8 +42,8 @@ const Home = () => {
   };
 
   const pods = [
-    { name: "Amber & Purple Pod", color: "#FFD966", image: filtImg },
-    { name: "Hexa Pod", color: "#B39CD0", image: filtImg },
+    { name: "Amber & Purple Pod", color: "#B39CD0", image: filtImg },
+    { name: "Hexa Pod", color: "#FFD966", image: filtImg },
     { name: "Opti Pod", color: "#93CFF0", image: filtImg },
     { name: "Filt Pod", color: "#82E0AA", image: filtImg },
   ];
@@ -52,12 +53,14 @@ const Home = () => {
       {/* Header */}
       <View style={styles.header}>
         <Image source={logo} style={styles.headerLogo} resizeMode="contain" />
-        <Ionicons
-          name="person-circle-outline"
-          style={styles.headerIcon}
-          size={40}
-          color="#34495E"
-        />
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <Ionicons
+            name="person-circle-outline"
+            style={styles.headerIcon}
+            size={40}
+            color="#34495E"
+          />
+        </TouchableOpacity>
       </View>
 
       {/* Scrollable content */}
@@ -66,9 +69,6 @@ const Home = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>💧 Welcome to HydroPods</Text>
-        <Text style={styles.subtitle}>Choose your Pod to get started</Text>
-
         {pods.map((pod, index) => {
           const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -99,6 +99,7 @@ const Home = () => {
                   {
                     backgroundColor: pod.color,
                     transform: [{ scale: scaleAnim }],
+                     marginBottom: index === pods.length - 1 ? 0 : 40,
                   },
                 ]}
               >
@@ -132,29 +133,20 @@ const styles = StyleSheet.create({
   headerLogo: { width: 120, height: 40, marginTop: 30 },
   headerIcon: { marginTop: 30 },
   scrollArea: { flex: 1 },
-  scrollContent: { flexGrow: 1, alignItems: "center", paddingVertical: 40 },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#2C3E50",
-    textAlign: "center",
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: "#7F8C8D",
-    marginBottom: 30,
-    textAlign: "center",
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 40,
   },
   card: {
     width: width * 0.9,
-    height: 100,
+    height: 80,
     borderRadius: 60, // rounded oval shape
     flexDirection: "row",
     alignItems: "center",
     paddingLeft: 20,
     paddingRight: 30,
-    marginBottom: 25,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
@@ -167,6 +159,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     marginRight: 20,
     marginLeft: -20, // pop-out effect
+    marginBottom: 50,
   },
   cardText: {
     fontSize: 20,
