@@ -13,7 +13,10 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import logo from "../../../assets/Hydropod_Logo.png";
-import filtImg from "../../../assets/FILT_Pod.png";
+import Amber from "../../../assets/Amber.png";
+import Filt from "../../../assets/Filt.png";
+import Hexa from "../../../assets/Hexa.png";
+import Opti from "../../../assets/Opti.png";
 import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
@@ -42,10 +45,10 @@ const Home = () => {
   };
 
   const pods = [
-    { name: "Amber & Purple Pod", color: "#B39CD0", image: filtImg },
-    { name: "Hexa Pod", color: "#FFD966", image: filtImg },
-    { name: "Opti Pod", color: "#93CFF0", image: filtImg },
-    { name: "Filt Pod", color: "#82E0AA", image: filtImg },
+    { name: "Amber & Purple Pod", color: "#B39CD0", image: Amber },
+    { name: "Hexa Pod", color: "#FFD966", image: Hexa },
+    { name: "Opti Pod", color: "#93CFF0", image: Opti },
+    { name: "Filt Pod", color: "#82E0AA", image: Filt },
   ];
 
   return (

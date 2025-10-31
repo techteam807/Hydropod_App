@@ -9,19 +9,15 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 
-const Profile = ({ setUserToken, navigation }) => {
+const Profile = ({ setUserToken }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
       try {
         const storedUser = await AsyncStorage.getItem("userData");
-        console.log("Loaded from AsyncStorage:", storedUser);
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
+        if (storedUser) setUser(JSON.parse(storedUser));
       } catch (error) {
         console.log("Error loading user:", error);
       } finally {
@@ -46,148 +42,122 @@ const Profile = ({ setUserToken, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Profile</Text>
-        <TouchableOpacity onPress={() => setDropdownVisible(!dropdownVisible)}>
-          <Ionicons
-            name="person-circle-outline"
-            style={styles.headerIcon}
-            size={40}
-            color="#34495E"
-          />
-        </TouchableOpacity>
-      </View>
+      <View style={styles.topHeader} />
 
-      {dropdownVisible && (
-        <View style={styles.dropdown}>
-          <TouchableOpacity style={styles.dropdownItem} onPress={handleLogout}>
-            <Ionicons name="log-out-outline" size={18} color="#FF3B30" />
-            <Text style={styles.dropdownText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      {/* User Info */}
-      <View style={styles.userCard}>
-        {/* Avatar with first letter */}
-        <View style={styles.avatarContainer}>
+      <View style={styles.profileCard}>
+        <View style={styles.avatar}>
           <Text style={styles.avatarText}>
-            {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+            {user?.name?.charAt(0).toUpperCase() || "U"}
           </Text>
         </View>
 
-        <Text style={styles.userName}>{user?.name || "N/A"}</Text>
-        <Text style={styles.userPhone}>{user?.mobile_number || "N/A"}</Text>
-        <Text style={styles.userRole}>Role: {user?.userRole || "N/A"}</Text>
+        <Text style={styles.name}>{user?.name || "User"}</Text>
       </View>
+
+      <Text style={styles.sectionTitle}>Account Information</Text>
+
+      <View style={styles.infoBox}>
+        <View style={styles.infoRow}>
+          <View style={styles.iconCircle}>
+            <Ionicons name="call-outline" size={20} color="#1D2939" />
+          </View>
+          <View>
+            <Text style={styles.label}>Phone</Text>
+            <Text style={styles.value}>{user?.mobile_number || "N/A"}</Text>
+          </View>
+        </View>
+
+        <View style={styles.line} />
+
+        <View style={styles.infoRow}>
+          <View style={styles.iconCircle}>
+            <Ionicons name="person-outline" size={20} color="#1D2939" />
+          </View>
+          <View>
+            <Text style={styles.label}>Role</Text>
+            <Text style={styles.value}>{user?.userRole || "N/A"}</Text>
+          </View>
+        </View>
+      </View>
+
+      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+        <Ionicons name="log-out-outline" size={22} color="#fff" />
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F2F4F7" },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  container: { flex: 1, backgroundColor: "#F7F8FA" },
+  loaderContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  topHeader: {
+    height: 160,
+    backgroundColor: "#32506e",
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+  profileCard: {
     backgroundColor: "#fff",
-    borderRadius: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    marginTop: 20,
-  },
-  headerIcon: { marginTop: 30 },
-  userCard: {
     alignItems: "center",
+    marginTop: -60,
     marginHorizontal: 20,
-    marginTop: 30,
-    paddingVertical: 30,
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  dropdown: {
-    position: "absolute",
-    right: 20,
-    top: 90,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    paddingVertical: 10,
-    width: 150,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
+    paddingVertical: 28,
+    borderRadius: 14,
     elevation: 5,
-    zIndex: 999,
   },
-  dropdownItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  dropdownText: {
-    marginLeft: 8,
-    fontSize: 16,
-    color: "#FF3B30",
-    fontWeight: "500",
-  },
-  avatarContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: "#2C3E50",
+  avatar: {
+    width: 86,
+    height: 86,
+    borderRadius: 43,
+    backgroundColor: "#E8ECF4",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
-    marginBottom: 15,
+    marginBottom: 12,
   },
-  avatarText: {
-    color: "#2C3E50",
-    fontSize: 38,
+  avatarText: { fontSize: 36, fontWeight: "700", color: "#1D2939" },
+  name: { fontSize: 22, fontWeight: "700", color: "#1D2939" },
+  role: { fontSize: 14, marginTop: 4, color: "#6C727F" },
+  sectionTitle: {
+    fontSize: 18,
     fontWeight: "700",
+    marginLeft: 22,
+    marginTop: 30,
+    marginBottom: 10,
+    color: "#1D2939",
   },
-  avatarText: { fontSize: 38, fontWeight: "700", color: "#2C3E50" },
-  userName: { fontSize: 28, fontWeight: "700", color: "#2C3E50", marginTop: 5 },
-  userPhone: { fontSize: 16, color: "#7F8C8D", marginTop: 5 },
-  userRole: { fontSize: 16, color: "#555", marginTop: 3 },
-
-  logoutButton: {
-    marginTop: 40,
-    alignSelf: "center",
-    flexDirection: "row",
-    alignItems: "center",
+  infoBox: {
+    backgroundColor: "#fff",
+    marginHorizontal: 20,
+    borderRadius: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    elevation: 3,
+  },
+  infoRow: { flexDirection: "row", alignItems: "center", paddingVertical: 14 },
+  iconCircle: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: "#EEF1F6",
     justifyContent: "center",
-    backgroundColor: "#FF3B30",
-    paddingVertical: 12,
-    paddingHorizontal: 30,
+    alignItems: "center",
+    marginRight: 12,
+  },
+  label: { fontSize: 13, color: "#6C727F" },
+  value: { fontSize: 16, fontWeight: "600", color: "#1D2939", marginTop: 2 },
+  line: { height: 1, backgroundColor: "#E5E7EB", marginVertical: 5 },
+  logoutBtn: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#32506e",
+    marginHorizontal: 20,
+    paddingVertical: 14,
     borderRadius: 10,
+    marginTop: 35,
   },
-  logoutText: {
-    color: "#fff",
-    fontSize: 16,
-    marginLeft: 6,
-    fontWeight: "600",
-  },
+  logoutText: { marginLeft: 8, fontSize: 17, fontWeight: "600", color: "#fff" },
 });
 
 export default Profile;
