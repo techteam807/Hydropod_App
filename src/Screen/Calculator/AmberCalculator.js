@@ -583,7 +583,7 @@ const AmberCalculator = () => {
                 { label: "Set Time for Refill (min)", key: "Refill" },
                 {
                   label: "Salt Required/Regeneration (kg NaCL)",
-                  key: "Salt RequiredRegeneration",
+                  key: "SaltRequiredRegeneration",
                 },
                 { label: "Salt in Brine Tank (kg NaCL)", key: "SaltBrineTank" },
               ].map(({ label, key }) => (
